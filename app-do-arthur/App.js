@@ -1,11 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+
+const image = {
+  uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrBjz23vepKBCUoK6POM-oLCi70rZwGVVwF40zOIhWwg&s=10'
+};
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.texto}>0-0-1 é a formação da sexta-feira</Text> 
-      <StatusBar style="auto" />
+      <ImageBackground source={image} style={styles.image}>
+        <Text style={styles.text}>
+          Usei ChatGPT para formatar o código
+        </Text>
+      </ImageBackground>
     </View>
   );
 }
@@ -13,24 +20,20 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'hsla(0, 100%, 100%, 0.99)',
-    alignItems: 'center', //alignItems: 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline'
-    justifyContent: 'center', //justifyContent: 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around' | 'space-evenly'
   },
 
-  texto: {
-    fontSize: 50,
+  image: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+
+  text: {
+    fontSize: 15,
     fontWeight: '500',
     fontStyle: 'normal',
-    textDecorationLine: 'underline', 
+    textDecorationLine: 'underline',
     textAlign: 'center',
-    color: 'blue',
-
-    //Estilos de texto
-      //fontWeight: 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
-      //fontStyle: 'normal' | 'italic'
-      //textAlign: 'auto' | 'left' | 'right' | 'center' | 'justify'
-      //textDecorationLine: 'none' | 'underline' | 'line-through' | 'underline line-through'
-      //textTransform: 'none' | 'uppercase' | 'lowercase' | 'capitalize'
+    color: 'pink',
+    backgroundColor: '#000000c0',
   },
 });
