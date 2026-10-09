@@ -30,34 +30,79 @@ function excluir(id) {
     db.runSync("DELETE FROM flores WHERE id = ?", [id]);
 }
 
+function atualizarFlor(nome, cor, nomeCientifico, id) {
+    db.runSync("UPDATE flores SET nome = ?, cor = ?, nomeCientifico = ? WHERE id = ?", [nome, cor, nomeCientifico, id]);
+}
+
+function buscarPorId(id) {
+    return db.getFirstSync("SELECT * FROM flores WHERE id = ?", [id]);
+}
+
+
 export default function ListaDb() {
     const [id, setId] = useState("");
     const [nome, setNome] = useState("");
     const [cor, setCor] = useState("");
     const [nomeCientifico, setNomeCientifico] = useState("");
+    const [idEditando, setIdEditando] = useState(0);
     const [lista, setLista] = useState([]);
 
     function carregar() {
         setLista(listar());
     }
 
+    function guardarOuEditar() {
+        if (idEditando === 0) {
+            adicionar(nome, cor, nomeCientifico);
+        } else {
+            atualizarFlor(nome, cor, nomeCientifico, idEditando);
+        }
+        setNome("");
+        setCor("");
+        setNomeCientifico("");
+        setIdEditando(0);
+        carregar();
+    }
+
+    function editar(flores) {
+        setIdEditando(flores.id);
+        setNome(flores.nome);
+        setCor(flores.cor);
+        setNomeCientifico(flores.nomeCientifico);
+    }
+
     useEffect(() => {
         carregar();
     }, []);
 
-    function salvar() {
-        adicionar(nome, cor, nomeCientifico);
-        setNome("");
-        setCor("");
-        setNomeCientifico("");
-        carregar();
-    }
 
     function remover() {
         excluir(id);
         setId("");
         carregar();
     }
+
+    const flor = buscarPorId(id);
+
+    if (flor) {
+        setIdEditando(flor.id);
+        setNome(flor.nome);
+        setCor(flor.cor);
+        setNomeCientifico(flor.nomeCientifico);
+    }
+
+    function carregarParaEditar() {
+        const flor = buscarPorId(id);
+
+        if (flor) {
+            setIdEditando(flor.id);
+            setNome(flor.nome);
+            setCor(flor.cor);
+            setNomeCientifico(flor.nomeCientifico);
+        }
+    }
+
+
 
     return (
         <SafeAreaView style={styles.tela} edges={["bottom"]}>
@@ -84,7 +129,7 @@ export default function ListaDb() {
             />
 
 
-            <Button title="Adicionar" onPress={salvar} />
+            <Button title="Salvar" onPress={guardarOuEditar} />
 
             <FlatList
                 style={styles.lista}
@@ -94,7 +139,17 @@ export default function ListaDb() {
             />
 
             <TextInput
-                style={styles.campo}
+                style={[styles.campo, { marginTop: 16 }]}
+                value={id}
+                onChangeText={setId}
+                placeholder="Digite o id para Editar"
+            />
+
+            <Button
+                title="Editar" onPress={carregarParaEditar} />
+
+            <TextInput
+                style={[styles.campo, { marginTop: 16 }]}
                 value={id}
                 onChangeText={setId}
                 placeholder="Digite o id para excluir"
